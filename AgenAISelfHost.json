@@ -1,0 +1,160 @@
+{
+  "name": "AgenAISelfHost",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Nadya. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bd349463-0b91-4910-9391-95dc9a0acb7e",
+      "name": "When chat message received",
+      "webhookId": "8b95e751-582b-424b-8c43-05bb7ec00c89"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah asisten AI customer service yang ramah. Tugasmu adalah menjawab pertanyaan pengguna mengenai daftar produk dan harganya. Gunakan Tool Google Sheets yang tersedia untuk mencari informasi produk dan harga sebelum memberikan jawaban. Jawablah secara singkat, akurat, dan sopan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7693df62-f04d-43a6-9a23-6888d717e3eb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        192
+      ],
+      "id": "a9453a7d-b1f9-4ffe-9dd6-a82f11ee8890",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yuhZJcL9mLHgBdMv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        272,
+        192
+      ],
+      "id": "c0cde91e-0419-44ee-b2ca-330b0227550a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13jUG30l92uSjiEQ2MVWVcTcGf8DrBqYsajKvJYVNUBg",
+          "mode": "list",
+          "cachedResultName": "Salinan data produk pelatihan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13jUG30l92uSjiEQ2MVWVcTcGf8DrBqYsajKvJYVNUBg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13jUG30l92uSjiEQ2MVWVcTcGf8DrBqYsajKvJYVNUBg/edit#gid=0"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        192
+      ],
+      "id": "0d6d956b-54b0-4adf-91b9-c0edd009355a",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ja9kAH82f1vOyzWi",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2f91e944-d9d8-47e0-a612-8d13b7126e76",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ec656fe861db96caedf3c16b1b2e39b1f5f7ad0e274c000a99c2ddc4a7fc4769"
+  },
+  "nodeGroups": [],
+  "id": "o6bUKoZfx9gsGdsD",
+  "tags": []
+}
